@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UserService</a> &gt; <a href="index.source.html" class="el_package">com.acradibotc.estore.service</a> &gt; <span class="el_source">UserServiceImpl.java</span></div><h1>UserServiceImpl.java</h1><pre class="source lang-java linenums">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.acradibotc.estore.service;
+
+import com.acradibotc.estore.data.UserRepository;
+import com.acradibotc.estore.model.User;
+import java.util.UUID;
+
+/**
+ *
+ * @author Anhnt206
+ */
+public class UserServiceImpl implements UserService {
+
+    UserRepository usersRepository;
+    EmailVerificationService emailVerificationService;
+
+<span class="fc" id="L20">    public UserServiceImpl(UserRepository usersRepository, EmailVerificationService emailVerificationService) {</span>
+<span class="fc" id="L21">        this.usersRepository = usersRepository;</span>
+<span class="fc" id="L22">        this.emailVerificationService = emailVerificationService;</span>
+<span class="fc" id="L23">    }</span>
+
+    @Override
+    public User createUser(String firstName, String lastName, String email, String password, String reapeatPassword) {
+
+<span class="pc bpc" id="L28" title="1 of 4 branches missed.">        if (firstName == null || firstName.trim().isEmpty()) {</span>
+<span class="fc" id="L29">            throw new IllegalArgumentException(&quot;User's first name is empty&quot;);</span>
+        }
+
+<span class="pc bpc" id="L32" title="1 of 4 branches missed.">        if (lastName == null || lastName.trim().length() == 0) {</span>
+<span class="fc" id="L33">            throw new IllegalArgumentException(&quot;User's last name is empty&quot;);</span>
+        }
+
+<span class="pc bpc" id="L36" title="1 of 4 branches missed.">        if (password == null || password.trim().length() == 0) {</span>
+<span class="fc" id="L37">            throw new IllegalArgumentException(&quot;Password is empty&quot;);</span>
+        }
+
+<span class="fc bfc" id="L40" title="All 2 branches covered.">        if (!password.equals(reapeatPassword)) {</span>
+<span class="fc" id="L41">            throw new IllegalArgumentException(&quot;RepeatPassword does not match Password&quot;);</span>
+        }
+<span class="fc" id="L43">        User user = new User(firstName, lastName, email, UUID.randomUUID().toString());</span>
+
+        boolean isUserCreated;
+         
+        try {
+<span class="fc" id="L48">            isUserCreated = usersRepository.save(user);</span>
+<span class="fc" id="L49">        } catch (RuntimeException ex) {</span>
+<span class="fc" id="L50">            throw new UserServiceException(ex.getMessage());</span>
+<span class="fc" id="L51">        }</span>
+
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        if (!isUserCreated) {</span>
+<span class="nc" id="L54">            throw new UserServiceException(&quot;Could not create user&quot;);</span>
+        }
+        
+        try {
+<span class="fc" id="L58">            emailVerificationService.scheduleEmailConfirmation(user);</span>
+<span class="fc" id="L59">        } catch (Exception ex) {</span>
+<span class="fc" id="L60">            throw new UserServiceException(ex.getMessage());</span>
+<span class="fc" id="L61">        }</span>
+        
+
+<span class="fc" id="L64">        return user;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

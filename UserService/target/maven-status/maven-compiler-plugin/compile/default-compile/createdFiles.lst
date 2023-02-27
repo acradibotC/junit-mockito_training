@@ -1,0 +1,9 @@
+com\acradibotc\estore\model\User.class
+com\acradibotc\estore\service\UserServiceException.class
+com\acradibotc\estore\data\UserRepository.class
+com\acradibotc\estore\data\UserRepositoryImpl.class
+com\acradibotc\estore\service\EmailVerificationServiceImpl.class
+com\acradibotc\estore\service\UserService.class
+com\acradibotc\estore\service\EmailNotificationServiceException.class
+com\acradibotc\estore\service\EmailVerificationService.class
+com\acradibotc\estore\service\UserServiceImpl.class
